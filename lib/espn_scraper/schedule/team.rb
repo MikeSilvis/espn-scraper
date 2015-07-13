@@ -22,10 +22,21 @@ module ESPN::Schedule
       data[:league]     = self.league
       data[:team_name]  = self.name
 
+
+      data[:games] = schedule(markup.css('tr'))
+
+      if league == 'mlb'
+        data[:games] << schedule(second_markup.css('tr'))
+      end
+
+      return data
+    end
+
+    def schedule(rows)
       headings = markup.css('.stathead').map(&:content)
       current_heading = -1
 
-      data[:games] = markup.css('tr').map do |row|
+      rows.map do |row|
         starting_index = league == 'nfl' ? 1 : 0
         next if row.attributes['class'].value == 'colhead'
 
@@ -75,7 +86,6 @@ module ESPN::Schedule
         game[:date]
       end
 
-      return data
     end
 
     private
@@ -86,6 +96,10 @@ module ESPN::Schedule
 
     def markup
       @markup ||= ESPN.get "#{league}/team/schedule/_/#{by}/#{name}/year/#{Date.today.year}"
+    end
+
+    def second_markup
+      @second_half ||= ESPN.get "#{league}/team/schedule/_/#{by}/#{name}/year/#{Date.today.year}/half/2"
     end
   end
 end
