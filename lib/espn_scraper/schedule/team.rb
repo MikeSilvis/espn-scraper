@@ -26,7 +26,7 @@ module ESPN::Schedule
       data[:games] = schedule(markup.css('tr'))
 
       if league == 'mlb'
-        data[:games] << schedule(second_markup.css('tr'))
+        data[:games] = schedule(second_markup.css('tr'))
       end
 
       return data
@@ -85,7 +85,6 @@ module ESPN::Schedule
       end.compact.sort_by do |game|
         game[:date]
       end
-
     end
 
     private
