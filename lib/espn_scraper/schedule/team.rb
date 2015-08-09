@@ -49,6 +49,8 @@ module ESPN::Schedule
         next if row.content.match(/BYE WEEK/)
         next if tds[starting_index + 2].content.match(/Postponed|Canceled/i)
 
+        has_hall_of_fame = false
+
         {}.tap do |game_info|
           time_string = "#{tds[starting_index + 2].content.match(/^\d*:\d\d (PM|AM)/)} EST"
           time = (Time.parse(time_string) rescue nil) if !time_string.match(/^[WL]/)
@@ -73,6 +75,15 @@ module ESPN::Schedule
           game_info[:is_away] = !!tds[(starting_index.to_i + 1)].content.match(/^@/)
           game_info[:week] = tds[0].content if %w[ncf nfl].include?(league)
           game_info[:heading] = headings[current_heading]
+
+          if game_info[:week] == 'HOF'
+            game_info[:week] = 1
+            has_hall_of_fame = true
+          end
+
+          if has_hall_of_fame && tds[0].content != 'HOF'
+            game_info[:week] = game_info[:week].to_i + 1
+          end
 
           if is_over
             game_info[:result] = tds[starting_index + 2].at_css('.score').content.strip
