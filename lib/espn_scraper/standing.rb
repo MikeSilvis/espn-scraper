@@ -25,7 +25,7 @@ module ESPN
     end
 
     def self.find(league, group)
-      %w[mlb nba].include?(league) ? new(league, group).get_updated : new(league, group).get
+      %w[mlb nba nfl].include?(league) ? new(league, group).get_updated : new(league, group).get
     end
 
     def get_updated
