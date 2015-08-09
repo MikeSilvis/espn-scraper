@@ -14,7 +14,9 @@ module ESPN
     end
 
     def uri
-      http_params = %W[ seasonYear=#{self.date.year} seasonType=1 weekNumber=#{closest_game_week} confId=80 ]
+      season_type = league == 'nfl' ? 1 : 2
+
+      http_params = %W[ seasonYear=#{self.date.year} seasonType=#{season_type} weekNumber=#{closest_game_week} confId=80 ]
 
       "#{self.league}/scoreboard?#{http_params.join('&')}"
     end
