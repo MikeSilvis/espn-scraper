@@ -35,14 +35,23 @@ module ESPN
         teams: {}
       }
 
-      if league == 'mlb'
+      if league == 'mlb' || league == 'ncf' || league == 'nfl'
         markup.css('table.standings').each do |header_table|
           starting_caption = header_table.at_css('caption').content
 
           header_table.css('tr').each do |header|
             next unless header.children.first.name == 'th'
 
-            data[:teams]["#{starting_caption} #{header.children.first.content}"] = []
+            if league == 'ncf' || league == 'nfl'
+              league_name = header.children.first.content
+              if league_name == ''
+                league_name = starting_caption
+              end
+
+              data[:teams][league_name] = []
+            else
+              data[:teams]["#{starting_caption} #{header.children.first.content}"] = []
+            end
           end
         end
       else
@@ -62,10 +71,11 @@ module ESPN
         children = team.children
 
         next if children.css('a').size == 0
+        team_data_name = league == 'ncf' ? ESPN.parse_data_name_from(team) : children.first.css('a').last.at_css('abbr').content.downcase
 
         data[:teams][key] << {
-          team: (children.first.css('a').last.at_css('abbr').content.downcase),
-          team_name: children.first.css('a').last.at_css('span .team-names').content,
+          team: team_data_name,
+          team_name: children.first.at_css('.team-names').content,
           league: self.league,
           stats: get_stats(team)
         }
