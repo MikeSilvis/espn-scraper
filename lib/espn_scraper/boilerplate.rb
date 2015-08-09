@@ -61,7 +61,7 @@ module ESPN
         if query
           CGI::parse(query)['team'].first
         else
-          link.split('/').last
+          link.match(/id\/\d+/).to_s.gsub('id/', '')
         end
       else
         if container.at_css('div')

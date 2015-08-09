@@ -22,7 +22,8 @@ module ESPN
         self.divisions[name] = div.css('.mod-content li').map do |team|
           team_elem = team.at_css('h5 a.bi')
           team_name = team_elem.content
-          url = team_elem['href']
+          url_array = team_elem['href'].split('/')
+          url = url_array[0..url_array.size-2].join('/')
           data_name = ESPN.parse_data_name_from(team)
 
           { name: team_name, data_name: data_name, url: url }
