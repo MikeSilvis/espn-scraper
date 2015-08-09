@@ -25,7 +25,7 @@ module ESPN
     end
 
     def self.find(league, group)
-      %w[mlb nba nfl].include?(league) ? new(league, group).get_updated : new(league, group).get
+      %w[mlb nba nfl ncf].include?(league) ? new(league, group).get_updated : new(league, group).get
     end
 
     def get_updated
@@ -61,9 +61,11 @@ module ESPN
         key = data[:teams].keys[current_key] || data[:teams].keys.last
         children = team.children
 
+        next if children.css('a').size == 0
+
         data[:teams][key] << {
           team: (children.first.css('a').last.at_css('abbr').content.downcase),
-          team_name: children.first.css('a').last.at_css('span').content,
+          team_name: children.first.css('a').last.at_css('span .team-names').content,
           league: self.league,
           stats: get_stats(team)
         }
