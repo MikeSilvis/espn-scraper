@@ -14,11 +14,18 @@ module ESPN
     end
 
     def uri
-      season_type = league == 'nfl' ? 1 : 2
-
-      http_params = %W[ seasonYear=#{self.date.year} seasonType=#{season_type} weekNumber=#{closest_game_week} confId=80 ]
+      http_params = %W[ seasonYear=#{self.date.year} seasonType=#{season_type} weekNumber=#{week} confId=80 ]
 
       "#{self.league}/scoreboard?#{http_params.join('&')}"
+    end
+
+    def week
+      # TODO: Remove after preseason
+      self.date > Date.new(2015, 8, 9) && league == 'nfl' ? closest_game_week + 1 : closest_game_week
+    end
+
+    def season_type
+      league == 'nfl' ? 1 : 2
     end
 
     def closest_game_week

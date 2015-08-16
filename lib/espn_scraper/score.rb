@@ -32,7 +32,7 @@ module ESPN
     end
 
     def nfl_scores
-      visitor_home_parse.tap do |scores|
+      updated_visitor_home_parse.tap do |scores|
         scores.each { |report| report[:league] = 'nfl' }
       end
     end
@@ -69,12 +69,16 @@ module ESPN
 
     def markup_from_date
       @markup_from_date ||= begin
-                              if %w[nfl ncf].include?(league)
+                              if %w[ncf].include?(league)
                                 ESPN.get ESPN::DateToWeek.find(league, date).uri
                               elsif %w[mlb nba].include?(league)
                                 league_string = league == 'mlb' ? 'baseball' : 'basketball'
                                 day = date.to_date.to_s.gsub(/[^\d]+/, '')
                                 http_url = "http://site.api.espn.com/apis/site/v2/sports/#{league_string}/#{league}/scoreboard?dates=#{day}"
+                                Nokogiri::HTML( HTTParty.get(http_url, timeout: 10).body)
+                              elsif league == 'nfl'
+                                date_to_week = ESPN::DateToWeek.find(league, date)
+                                http_url = "http://site.api.espn.com/apis/site/v2/sports/football/#{league}/scoreboard?seasontype=#{date_to_week.season_type}&week=#{date_to_week.week}"
                                 Nokogiri::HTML( HTTParty.get(http_url, timeout: 10).body)
                               else
                                 day = date.to_date.to_s.gsub(/[^\d]+/, '')

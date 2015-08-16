@@ -74,7 +74,7 @@ module ESPN::Schedule
           game_info[:opponent] = ESPN.parse_data_name_from(tds[starting_index + 1])
           game_info[:opponent_name] = tds[(starting_index.to_i + 1)].at_css('.team-name').content.to_s.gsub(/#\d*/, '').strip
           game_info[:is_away] = !!tds[(starting_index.to_i + 1)].content.match(/^@/)
-          game_info[:week] = tds[0].content if %w[ncf nfl].include?(league)
+          game_info[:week] = tds[0].content.to_i if %w[ncf nfl].include?(league)
           game_info[:heading] = headings[current_heading]
 
           if league == 'ncf'
