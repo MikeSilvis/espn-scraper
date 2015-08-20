@@ -65,11 +65,18 @@ module ESPN::Schedule
                                date
                              end
 
+          date = game_info[:date]
+          #puts 'setting date initially'
+          #byebug if game_info[:date] == Date.new(2016, 1, 3)
+
           game_info[:date] = if is_over && Date.today < date
                                date - 1.year
                              else
                                date
                              end
+
+          #puts 'changing date'
+          #byebug if game_info[:date] == Date.new(2015, 1, 3)
 
           game_info[:opponent] = ESPN.parse_data_name_from(tds[starting_index + 1])
           game_info[:opponent_name] = tds[(starting_index.to_i + 1)].at_css('.team-name').content.to_s.gsub(/#\d*/, '').strip
