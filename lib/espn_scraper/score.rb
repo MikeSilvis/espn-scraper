@@ -81,8 +81,8 @@ module ESPN
                                 http_url = "http://site.api.espn.com/apis/site/v2/sports/football/#{league}/scoreboard?seasontype=#{date_to_week.season_type}&week=#{date_to_week.week}"
                                 Nokogiri::HTML( HTTParty.get(http_url, timeout: 10).body)
                               else
-                                day = date.to_date.to_s.gsub(/[^\d]+/, '')
                                 ESPN.get('scores', league, "scoreboard?date=#{ day }")
+                                day = date.to_date.to_s.gsub(/[^\d]+/, '')
                               end
                             end
     end
@@ -96,7 +96,7 @@ module ESPN
       JSON.parse(markup_from_date)['events'].map do |event|
         game_info = {}
 
-        game_info[:game_date] = self.date
+        game_info[:game_date] = Date.parse(event['date'])
         game_info[:league]    = self.league
         game_info[:boxscore]  = event['id']
         game_info[:preview]   = event['id']
