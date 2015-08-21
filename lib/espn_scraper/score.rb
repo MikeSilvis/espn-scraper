@@ -119,7 +119,7 @@ module ESPN
             game_info[:away_team_name]   = competitor['team']['shortDisplayName']
             game_info[:away_team]        = competitor['team']['abbreviation'].downcase
             game_info[:away_score]       = competitor['statistics'][score_index]['displayValue'].to_i unless game_info[:state] == 'pregame' rescue competitor['linescores'].map { |a| a['value'] }.inject{|sum,x| sum + x }
-            game_info[:home_score]       = competitor['score'] if league == 'nfl'
+            game_info[:away_score]       = competitor['score'] if league == 'nfl'
           end
         end
 
