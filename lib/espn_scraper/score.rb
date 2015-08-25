@@ -20,7 +20,7 @@ module ESPN
                       ESPN::Cache.read(cache_key)
                     else
                       new(league, date).public_send("#{league}_scores").select do |score|
-                        score[:game_date] == date
+                        score[:game_date].in_time_zone("Mountain Time (US & Canada)").to_date == date.in_time_zone("Mountain Time (US & Canada)").to_date
                       end
                     end
 
