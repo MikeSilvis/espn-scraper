@@ -96,7 +96,7 @@ module ESPN
       JSON.parse(markup_from_date)['events'].map do |event|
         game_info = {}
 
-        game_info[:game_date] = Date.parse(event['date'])
+        game_info[:game_date] = DateTime.parse(event['date'])
         game_info[:league]    = self.league
         game_info[:boxscore]  = event['id']
         game_info[:preview]   = event['id']
