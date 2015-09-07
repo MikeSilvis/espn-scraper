@@ -1,3 +1,7 @@
+# Deprecated
+
+I regret to inform you that this API is now deprecated. With the significant changes that have occurred on ESPN.com i decided to re-write the gem in a more object-oriented approach along with a full TDD suite. Please see https://github.com/mikesilvis/sports_api for continued API usage. 
+
 # ESPN Scraper
 
 ESPN Scraper is a simple gem for scraping teams and scores from `ESPN`'s website. Please note that `ESPN` is not involved with this gem or me in any way. I chose `ESPN` because it is a leader in sports statistics and has a robust website. 
